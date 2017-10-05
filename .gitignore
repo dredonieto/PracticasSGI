@@ -1,0 +1,23 @@
+﻿################################################################################
+# Este archivo .gitignore ha sido creado automáticamente por Microsoft(R) Visual Studio.
+################################################################################
+
+/HolaOpenGL/Release/HolaOpenGL.tlog/link.write.1.tlog
+/HolaOpenGL/Release/HolaOpenGL.tlog/link.read.1.tlog
+/HolaOpenGL/Release/HolaOpenGL.tlog/link.command.1.tlog
+/HolaOpenGL/Release/HolaOpenGL.tlog/HolaOpenGL.lastbuildstate
+/HolaOpenGL/Release/HolaOpenGL.tlog/CL.write.1.tlog
+/HolaOpenGL/Release/HolaOpenGL.tlog/CL.read.1.tlog
+/HolaOpenGL/Release/HolaOpenGL.tlog/CL.command.1.tlog
+/HolaOpenGL/Release/HolaOpenGL.log
+/PracticasSGI.VC.VC.opendb
+/PracticasSGI.VC.db
+/PracticasSGI.sln
+/HolaOpenGL/Release/vc140.pdb
+/HolaOpenGL/Release/HolaOpenGL.obj
+/HolaOpenGL/HolaOpenGL.vcxproj.filters
+/HolaOpenGL/HolaOpenGL.vcxproj
+/HolaOpenGL/HolaOpenGL.pdb
+/HolaOpenGL/HolaOpenGL.ipdb
+/HolaOpenGL/HolaOpenGL.iobj
+/HolaOpenGL/HolaOpenGL.exe
