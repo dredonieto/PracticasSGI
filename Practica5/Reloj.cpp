@@ -18,6 +18,9 @@ static GLuint circulo;
 static float alfaSec = 0;
 static float alfaMin = 0;
 static float alfaHor = 0;
+static float scaleS = 0;
+static float factor = 0.0025;
+// Posicion de la camara en el eje Z
 static int px = 0;		//POSx de la camara
 static int py = 0;		//POSy de la camara
 static int pz = 2;		//POSz de la camara
@@ -35,11 +38,7 @@ void init() {
 	localtime_s(&now, &t);
 	alfaSec = now.tm_sec * 360 / 60;
 	alfaMin = now.tm_min * 360 / 60;
-	// TODO: Poner las horas en funcion de cuantos minutos han pasado
-	alfaHor = now.tm_hour * 360 /12;
-	cout << now.tm_sec << endl;
-	cout << now.tm_min << endl;
-	cout << now.tm_hour << endl;
+	alfaHor = now.tm_hour * 360 /12 + (alfaMin * 30 / 360);
 
 	// Rectangulo de lado uno para modelar la posicion de las horas
 	rectangulo = glGenLists(1);
@@ -52,7 +51,7 @@ void init() {
 	glEnd();
 	glEndList();
 
-	/*
+	// Circulo que sera usado en el centro del reloj
 	circulo = glGenLists(1);
 	glNewList(circulo, GL_COMPILE);
 	glBegin(GL_POLYGON);
@@ -60,7 +59,7 @@ void init() {
 		glVertex3f(cos(i * 20 *PI / 180), sin(i * 20 *PI / 180), 0);
 	}
 	glEnd();
-	glEndList();*/
+	glEndList();
 }
 
 void display() {
@@ -72,29 +71,31 @@ void display() {
 
 	gluLookAt(px, py, pz, 0, 0, 0, 0, 1, 0);		// Mirando al origen y la vertical el eje y
 
-	// Rectangulos Grandes
+	// Rectangulos Grandes. Horas: 12, 3, 6, 9
 	for (int i = 0; i < 4 ; i++) {
 		glPushMatrix();
 		glPushAttrib(GL_CURRENT_BIT);
+		// Cambia de color conforme pasan los segundos
 		if (alfaSec >= i * 90) {
-			glColor3f(1, 0, 0);
+			glColor3f(0.9, 0, 0);
 		}else {
 			glColor3f(0, 0, 0);
 		}
 		glRotatef(i * -90, 0, 0, 1);
-		glTranslatef(0, 0.95, 0);
+		glTranslatef(-0.025, 0.95, 0);
 		glScalef(0.075, 0.2, 0);
 		glCallList(rectangulo);
 		glPopAttrib();
 		glPopMatrix();
 	}
 
-	// Rectangulos medianos
+	// Rectangulos medianos. Marca el resto de horas.
 	for (int i = 0; i < 12; i++) {
 			glPushMatrix();
 			glPushAttrib(GL_CURRENT_BIT);
+			// Cambia de color conforme pasan los segundos.
 			if (alfaSec >= i*30) {
-				glColor3f(1, 0, 0);
+				glColor3f(0.9, 0, 0);
 			}else {
 				glColor3f(0, 0, 0);
 			}
@@ -106,12 +107,13 @@ void display() {
 			glPopMatrix();
 	}
 
-	// Rectangulos pequeños
+	// Rectangulos pequeños. Marca los minutos.
 	for (int i = 0; i < 60; i++) {
 		glPushMatrix();
 		glPushAttrib(GL_CURRENT_BIT);
+		// Cambia de color conforme pasan los segundos.
 		if (alfaSec >= i * 360/60) {
-			glColor3f(1, 0, 0);
+			glColor3f(0.9, 0, 0);
 		}else {
 			glColor3f(0, 0, 0);
 		}
@@ -123,13 +125,22 @@ void display() {
 		glPopMatrix();
 	}
 
+	// Circulo central
+	glPushMatrix();
+	glPushAttrib(GL_CURRENT_BIT);
+	glColor3f(1, 0, 1);
+	glScalef(scaleS, scaleS, 0);
+	glutWireSphere(1, 20, 20);
+	glPopAttrib();
+	glPopMatrix();
+
 	// Secundero
 	glPushMatrix();
 	glPushAttrib(GL_CURRENT_BIT);
 	glColor3f(1, 0, 0);
 	glRotatef(-alfaSec, 0, 0, 1);
-	glTranslatef(0, -0.2, 0);
-	glScalef(0.025, 1, 0);
+	glTranslatef(0, -0.1, 0);
+	glScalef(0.025, 0.9, 0);
 	glCallList(rectangulo);
 	glPopAttrib();
 	glPopMatrix();
@@ -139,8 +150,8 @@ void display() {
 	glPushAttrib(GL_CURRENT_BIT);
 	glColor3f(0, 0, 0);
 	glRotatef(-alfaMin, 0, 0, 1);
-	glTranslatef(0, -0.2, 0);
-	glScalef(0.05, 1, 0);
+	glTranslatef(0, -0.1, 0);
+	glScalef(0.035, 0.9, 0);
 	glCallList(rectangulo);
 	glPopAttrib();
 	glPopMatrix();
@@ -150,8 +161,8 @@ void display() {
 	glPushAttrib(GL_CURRENT_BIT);
 	glColor3f(0, 0, 0);
 	glRotatef(-alfaHor, 0, 0, 1);
-	glTranslatef(0, -0.1, 0);
-	glScalef(0.075, 0.5, 0);
+	glTranslatef(0, -0.025, 0);
+	glScalef(0.065, 0.4, 0);
 	glCallList(rectangulo);
 	glPopAttrib();
 	glPopMatrix();
@@ -172,23 +183,32 @@ void resize(int w, int h) {
 }
 
 void update() {
-	/*
-	int ahoraSec, tiempo_transSec;
-	static int antesSec = glutGet(GLUT_ELAPSED_TIME);
-	ahoraSec = glutGet(GLUT_ELAPSED_TIME);
-	tiempo_transSec = ahoraSec - antesSec;
-	if (tiempo_transSec > 1000) {
-		alfaSec += 360 / 60;
-		antesSec = ahoraSec;
-	}*/
-
 	time_t  tim = time(0);
 	localtime_s(&now, &tim);
 	alfaSec = now.tm_sec * 360 / 60;
 	alfaMin = now.tm_min * 360 / 60;
-	// TODO: Fallo al calcular las horas. 
-	//alfaHor = now.tm_hour / 2 * 360 / 12;
+	// Este calculo se hace para que las horas se posicionen en funcion de los minutos
+	alfaHor = now.tm_hour * 360 / 12 + (alfaMin * 30 / 360);
 
+	int ahora, tiempo_trans;
+	static float aux = 0.0;
+	static int antes = glutGet(GLUT_ELAPSED_TIME);
+	ahora = glutGet(GLUT_ELAPSED_TIME);
+	tiempo_trans = ahora - antes;
+	if (tiempo_trans > 200) {
+		aux += factor;
+		if (aux > 0.1) {
+			factor = factor * -1;
+			antes = ahora;
+		}
+		else if (aux < 0.0) {
+			factor = factor * -1;
+			antes = ahora;
+		}
+		else {
+			scaleS = aux;
+		}
+	}
 	glutPostRedisplay();
 }
 
