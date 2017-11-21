@@ -19,7 +19,7 @@ static float alfaSec = 0;
 static float alfaMin = 0;
 static float alfaHor = 0;
 static float scaleS = 0;
-static float factor = 0.0025;
+static float factor = 0.001;
 // Posicion de la camara en el eje Z
 static int px = 0;		//POSx de la camara
 static int py = 0;		//POSy de la camara
@@ -161,7 +161,7 @@ void display() {
 	glPushAttrib(GL_CURRENT_BIT);
 	glColor3f(0, 0, 0);
 	glRotatef(-alfaHor, 0, 0, 1);
-	glTranslatef(0, -0.025, 0);
+	glTranslatef(-0.02, -0.025, 0);
 	glScalef(0.065, 0.4, 0);
 	glCallList(rectangulo);
 	glPopAttrib();
@@ -189,25 +189,15 @@ void update() {
 	alfaMin = now.tm_min * 360 / 60;
 	// Este calculo se hace para que las horas se posicionen en funcion de los minutos
 	alfaHor = now.tm_hour * 360 / 12 + (alfaMin * 30 / 360);
-
-	int ahora, tiempo_trans;
 	static float aux = 0.0;
-	static int antes = glutGet(GLUT_ELAPSED_TIME);
-	ahora = glutGet(GLUT_ELAPSED_TIME);
-	tiempo_trans = ahora - antes;
-	if (tiempo_trans > 200) {
-		aux += factor;
-		if (aux > 0.1) {
-			factor = factor * -1;
-			antes = ahora;
-		}
-		else if (aux < 0.0) {
-			factor = factor * -1;
-			antes = ahora;
-		}
-		else {
-			scaleS = aux;
-		}
+	aux += factor;
+	// Control del tamaño de la esfera central
+	if (aux > 0.1) {
+		factor = factor * -1;
+	}else if (aux < 0.0) {
+		factor = factor * -1;
+	}else{
+		scaleS = aux;
 	}
 	glutPostRedisplay();
 }
