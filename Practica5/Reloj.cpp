@@ -14,7 +14,6 @@
 using namespace std;
 
 static GLuint rectangulo;
-static GLuint circulo;
 static float alfaSec = 0;
 static float alfaMin = 0;
 static float alfaHor = 0;
@@ -40,7 +39,8 @@ void init() {
 	alfaMin = now.tm_min * 360 / 60;
 	alfaHor = now.tm_hour * 360 /12 + (alfaMin * 30 / 360);
 
-	// Rectangulo de lado uno para modelar la posicion de las horas
+	// Rectangulo de lado uno que se usa para modelar
+	// todos los rectangulos que se dibujan en la escena
 	rectangulo = glGenLists(1);
 	glNewList(rectangulo, GL_COMPILE);
 	glBegin(GL_POLYGON);
@@ -48,16 +48,6 @@ void init() {
 	glVertex3f(0, 1, 0);
 	glVertex3f(0, 0, 0);
 	glVertex3f(1, 0, 0);
-	glEnd();
-	glEndList();
-
-	// Circulo que sera usado en el centro del reloj
-	circulo = glGenLists(1);
-	glNewList(circulo, GL_COMPILE);
-	glBegin(GL_POLYGON);
-	for (int i = 0; i < 360; i++) {
-		glVertex3f(cos(i * 20 *PI / 180), sin(i * 20 *PI / 180), 0);
-	}
 	glEnd();
 	glEndList();
 }
@@ -125,7 +115,7 @@ void display() {
 		glPopMatrix();
 	}
 
-	// Circulo central
+	// Esfera central
 	glPushMatrix();
 	glPushAttrib(GL_CURRENT_BIT);
 	glColor3f(1, 0, 1);
