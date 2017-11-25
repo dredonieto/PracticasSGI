@@ -2,7 +2,7 @@
 *	PRACTICA 6
 *	DAVID REDO NIETO
 */
-#define PROYECTO "Practica6"
+#define PROYECTO "Practica_6"
 
 // Ficheros a incluir
 #include <iostream>    //Entrada salida de consola
@@ -14,7 +14,11 @@ using namespace std;
 static float posx = 0, y = 1, posz = 0;
 static float velx = 0.0;
 static float giroy = 0.0;
-static float quadSize = 20;
+static float quadSize = 2;
+static float amplitud = 15;
+static float T = 178;
+static float ancho = 8;
+
 
 void init() {
 
@@ -26,9 +30,16 @@ void init() {
 
 }
 
+float trazado(float u) {
+	return amplitud * sin(u*2*PI/T);
+	/*
+	return -(2 * PI * amplitud / T * cos( u * 2*PI / T));
+	*/
+}
+
 void updateVel() {
 	stringstream titulo;
-	titulo << "Velocidad: " << velx << " m/s";
+	titulo << PROYECTO << ". Velocidad: " << velx << " m/s";
 	glutSetWindowTitle(titulo.str().c_str());
 }
 
@@ -41,17 +52,20 @@ void display() {
 	gluLookAt(posx, 1, posz, 10000 * cos(giroy), 0, 10000 * sin(giroy), 0, 1, 0);
 
 	glColor3f(0, 0, 0);
-	glPolygonMode(GL_FRONT, GL_LINE);
+	//glPolygonMode(GL_FRONT, GL_LINE);
 	// Dibujar la carretera a partir de tu posicion
-	for (int i = posx/quadSize; i < 50 + posx; i++) {
-		GLfloat v0[3] = { quadSize*i,0, 5 };
-		GLfloat v1[3] = { quadSize*(i + 1),0,5 };
-		GLfloat v2[3] = { quadSize*(i + 1),0,-5 };
-		GLfloat v3[3] = { quadSize*i,0,-5 };
-		quad(v0, v1, v2, v3, 10, 5);
+	for (int i = posx/quadSize; i < 75 + posx; i++) {
+		float u = quadSize*i; float u2 = quadSize* (i + 1);
+		// TODO: Hacer las curvas
+		float fu = trazado(u);
+		float fu2 = trazado(u2);
+		GLfloat v0[3] = { u, 0, ancho /2  + fu };
+		GLfloat v1[3] = { u2, 0, ancho / 2 + fu2 };
+		GLfloat v2[3] = { u2, 0, -ancho /2 + fu2 };
+		GLfloat v3[3] = { u, 0, -ancho / 2 + fu };
+		quad(v0, v1, v2, v3, 1, 5);
 	}
 	
-
 	updateVel();
 
 	glutSwapBuffers();
