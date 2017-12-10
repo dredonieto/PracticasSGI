@@ -1,8 +1,8 @@
 /*
-*	PRACTICA 6
+*	PRACTICA 7
 *	DAVID REDO NIETO
 */
-#define PROYECTO "Interfaz de conducción"
+#define PROYECTO "Conducción nocturna"
 
 // Ficheros a incluir
 #include <iostream>    //Entrada salida de consola
@@ -97,14 +97,14 @@ void init() {
 	glLightf(GL_LIGHT5, GL_SPOT_EXPONENT, 10.0);
 	glEnable(GL_LIGHT5);
 	// Materiales
-	/*const GLfloat Dm0[] = { 0.8,0.8,0.8,1.0 };
+	const GLfloat Dm0[] = { 0.8,0.8,0.8,1.0 };
 	const GLfloat Sm0[] = { 0.3,0.3,0.3,1.0 };
 	const GLfloat sm0 = 3;
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, Dm0);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Sm0);
 	glMaterialf(GL_FRONT, GL_SHININESS, sm0);
 	glColorMaterial(GL_FRONT, GL_DIFFUSE);
-	glEnable(GL_COLOR_MATERIAL);*/
+	glEnable(GL_COLOR_MATERIAL);
 }
 
 void updateVel() {
@@ -122,7 +122,7 @@ void display() {
 	// Light 1 solidaria a la camara
 	GLfloat Pl1[] = { 0,0,0,1 };
 	glLightfv(GL_LIGHT1, GL_POSITION, Pl1);
-	GLfloat dir_central[] = { 0, -1, -2 };
+	GLfloat dir_central[] = { 0, -0.8, -01.4 };
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, dir_central);
 
 	gluLookAt(posx, 1, posz, girox, 0, giroz, 0, 1, 0);
@@ -136,7 +136,7 @@ void display() {
 	
 	// Farola1
 	if (posx > farola1x + 3) {
-		farola1x += 60;
+		farola1x += 120;
 		farola1z = trazado(farola1x);
 	}
 	GLfloat position1[] = { farola1x , 4, farola1z , 1 };
@@ -170,7 +170,7 @@ void display() {
 	glLightfv(GL_LIGHT5, GL_POSITION, position4);
 	glLightfv(GL_LIGHT5, GL_SPOT_DIRECTION, dir_farola);
 
-	glColor3f(0, 0, 0);
+	glColor3fv(BLANCO);
 	glPolygonMode(GL_FRONT, GL_FILL);
 	//glNormal3f(0, 1, 0);
 	// Dibujar la carretera a partir de tu posicion
