@@ -12,6 +12,8 @@
 
 using namespace std;
 static float posx = 0, y = 1, posz = 0;
+static float farola1x = 30, farola2x = 60, farola3x = 90, farola4x = 120;
+static float farola1z = 0, farola2z = 0, farola3z = 0, farola4z = 0;
 static float velx = 0.0;
 static float giro = 0.0, girox = 0.0, giroz = 0.0;
 static float quadSize = 2;
@@ -33,6 +35,12 @@ void init() {
 
 	// Giro inicial a la camara para que este en el centro
 	giro = atan(trazado(quadSize) / quadSize);
+
+	// Posicion inicial de las luces
+	farola1z = trazado(farola1x);
+	farola2z = trazado(farola2x);
+	farola3z = trazado(farola3x);
+	farola4z = trazado(farola4x);
 
 	// Luces
 	glEnable(GL_LIGHTING);
@@ -126,9 +134,41 @@ void display() {
 	// Farola
 	GLfloat dir_farola[] = { 0, -1, 0 };
 	
-	GLfloat position1[] = { posx , 4, posz , 1 };
+	// Farola1
+	if (posx > farola1x + 3) {
+		farola1x += 60;
+		farola1z = trazado(farola1x);
+	}
+	GLfloat position1[] = { farola1x , 4, farola1z , 1 };
 	glLightfv(GL_LIGHT2, GL_POSITION, position1);
 	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, dir_farola);
+
+	// Farola2
+	if (posx > farola2x + 3) {
+		farola2x += 120;
+		farola2z = trazado(farola2x);
+	}
+	GLfloat position2[] = { farola2x , 4, farola2z , 1 };
+	glLightfv(GL_LIGHT3, GL_POSITION, position2);
+	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, dir_farola);
+
+	// Farola3
+	if (posx > farola3x + 3) {
+		farola3x += 120;
+		farola3z = trazado(farola3x);
+	}
+	GLfloat position3[] = { farola3x , 4, farola3z , 1 };
+	glLightfv(GL_LIGHT4, GL_POSITION, position3);
+	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, dir_farola);
+
+	// Farola3
+	if (posx > farola4x + 3) {
+		farola4x += 120;
+		farola4z = trazado(farola4x);
+	}
+	GLfloat position4[] = { farola4x , 4, farola4z , 1 };
+	glLightfv(GL_LIGHT5, GL_POSITION, position4);
+	glLightfv(GL_LIGHT5, GL_SPOT_DIRECTION, dir_farola);
 
 	glColor3f(0, 0, 0);
 	glPolygonMode(GL_FRONT, GL_FILL);
@@ -170,10 +210,10 @@ void onKey(int tecla, int x, int y) {
 		if (velx < 0) velx = 0.0;
 		break;
 	case GLUT_KEY_LEFT:
-		giro -= 0.25 * PI / 180;
+		giro -= 0.5 * PI / 180;
 		break;
 	case GLUT_KEY_RIGHT:
-		giro += 0.25 * PI / 180;
+		giro += 0.5 * PI / 180;
 		break;
 	}
 	glutPostRedisplay();
